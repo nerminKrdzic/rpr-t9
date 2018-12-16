@@ -7,10 +7,10 @@ public class Drzava {
     private int drzava;
 
     public Drzava(int id, String naziv, int broj_stanovnika, int drzava) {
-        this.id = id;
-        this.naziv = naziv;
-        this.broj_stanovnika = broj_stanovnika;
-        this.drzava = drzava;
+        setId(id);
+        setNaziv(naziv);
+        setBroj_stanovnika(broj_stanovnika);
+        setDrzava(drzava);
     }
 
     public int getId() {
