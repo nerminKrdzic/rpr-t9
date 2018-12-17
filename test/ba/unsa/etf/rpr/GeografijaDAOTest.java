@@ -25,11 +25,13 @@ class GeografijaDAOTest {
     @Test
     void glavniGrad() {
         GeografijaDAO dao = GeografijaDAO.getInstance();
-        dao.resetBazu();
+        dao.resetBazu(); // zasto se u testovima smatra da ce baza biti u pocetnom obliku svaki put
+        // kad se testovi izvrsavaju u random reoslijdu????? i u pitanju je baza podataka
+        // baza je tu da bi se sacuvali podaci
         Grad nepoznat = dao.glavniGrad("Bosna i Hercegovina");
         assertNull(nepoznat);
         Grad bech = dao.glavniGrad("Austrija");
-        assertEquals("Bec", bech.getNaziv());
+        assertEquals("Beč", bech.getNaziv());
     }
 
     @Test

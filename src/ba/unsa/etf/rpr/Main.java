@@ -12,8 +12,8 @@ public class Main {
         ArrayList<Grad> gradovi = GeografijaDAO.getInstance().gradovi();
         for(Grad g: gradovi){
             if(g.getDrzava() != null)
-                ispis += g.getNaziv() + " (" + g.getDrzava().getNaziv() + ") " + g.getBrojStanovnika() + "\n";
-            else ispis += g.getNaziv() + " () " + g.getBrojStanovnika() + "\n";
+                ispis += g.getNaziv() + " (" + g.getDrzava().getNaziv() + ") - " + g.getBrojStanovnika() + "\n";
+            else ispis += g.getNaziv() + " () - " + g.getBrojStanovnika() + "\n";
         }
         return ispis;
     }

@@ -98,15 +98,14 @@ public class GeografijaDAO {
         }
         Grad g1 = new Grad(100, "Pariz", 2206488, null);
         Grad g2 = new Grad(102, "London", 8825000, null);
-        Grad g3 = new Grad(104, "Bec", 1899055, null);
+        Grad g3 = new Grad(104, "Beč", 1899055, null);
         Grad g4 = new Grad(106, "Manchester", 545500, null);
-        Grad g5 = new Grad(108, "Graz", 280200, null);
+        Grad g5 = new Grad(107, "Graz", 280200, null);
         Drzava d1 = new Drzava(101, "Francuska",  null);
-        Drzava d2 = new Drzava(103, "Engleska", null);
+        Drzava d2 = new Drzava(103, "Velika Britanija", null);
         Drzava d3 = new Drzava(105, "Austrija", null);
-        Drzava d4 = new Drzava(107, "Velika Britanija", null);
-        g1.setDrzava(d1); g2.setDrzava(d2); g3.setDrzava(d3); g4.setDrzava(d4); g5.setDrzava(d3);
-        d1.setGlavniGrad(g1); d2.setGlavniGrad(g2); d3.setGlavniGrad(g3); d4.setGlavniGrad(g4);
+        g1.setDrzava(d1); g2.setDrzava(d2); g3.setDrzava(d3); g4.setDrzava(d2); g5.setDrzava(d3);
+        d1.setGlavniGrad(g1); d2.setGlavniGrad(g2); d3.setGlavniGrad(g3);
         dodajGrad(g1); dodajGrad(g2); dodajGrad(g3); dodajGrad(g4); dodajGrad(g5);
     }
 
