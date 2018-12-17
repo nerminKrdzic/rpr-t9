@@ -7,13 +7,13 @@ import java.util.ArrayList;
 public class GeografijaDAO {
     private static GenerateID lastID;
     private static GeografijaDAO instance = null;
-    private final String URL = "jdbc:sqlite:resources/baza.db";
+    private final String URL = "jdbc:oracle:thin:@ora.db.lab.ri.etf.unsa.ba:1521:ETFLAB";
     private Connection connection;
     private PreparedStatement glavniGradQuery, obrisiDrzavuQuery1, obrisiDrzavuQuery2, gradoviQuery, drzaveQuery, dodajGradQuery, dodajDrzavuQuery, izmijeniGradQuery, nadjiDrzavuQuery, deleteGradQuery, deleteDrzavaQuery;
     private PreparedStatement selektGradovi, selektDrzave;
     private GeografijaDAO(){
         try {
-            connection = DriverManager.getConnection(URL);
+            connection = DriverManager.getConnection(URL, "NK17825", "xuYoshjV");
             prepareStatements();
             ResultSet maxID = getConnection().createStatement().executeQuery("select max(id), max(drzava) from grad");
             if(maxID.next()){
@@ -73,18 +73,6 @@ public class GeografijaDAO {
             try{
                 instance.getConnection().close();
             } catch (SQLException e) { }
-        }
-        if(lastID != null){
-            PrintWriter izlaz = null;
-            try{
-                izlaz = new PrintWriter(new FileWriter("lastID.xml"));
-                izlaz.println(lastID.getLastID());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if(izlaz != null)
-                    izlaz.close();
-            }
         }
         instance = null;
     }
