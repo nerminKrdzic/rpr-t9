@@ -16,10 +16,10 @@ class GeografijaDAOTest {
         File dbfile = new File("resources/baza.db");
         dbfile.delete();
         GeografijaDAO dao = GeografijaDAO.getInstance();
+        dao.resetBazu();
         ArrayList<Grad> gradovi = dao.gradovi();
         assertEquals("London", gradovi.get(0).getNaziv());
         assertEquals("Francuska", gradovi.get(1).getDrzava().getNaziv());
-        dao.resetBazu();
     }
 
     @Test
