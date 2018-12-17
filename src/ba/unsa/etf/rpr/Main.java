@@ -11,12 +11,22 @@ public class Main {
         String ispis = new String("");
         ArrayList<Grad> gradovi = GeografijaDAO.getInstance().gradovi();
         for(Grad g: gradovi){
-            if(g.getDrzava() != null)
-                ispis += g.getNaziv() + " (" + g.getDrzava().getNaziv() + ") - " + g.getBrojStanovnika() + "\n";
-            else ispis += g.getNaziv() + " () - " + g.getBrojStanovnika() + "\n";
+            ispis += g.toString();
         }
         return ispis;
     }
+
+    public static void glavniGrad(){
+        System.out.println("Unesite naziv drzave: ");
+        Scanner scanner = new Scanner(System.in);
+        GeografijaDAO dao = GeografijaDAO.getInstance();
+        String naziv = scanner.nextLine().trim();
+        Grad glavniGrad = dao.glavniGrad(naziv);
+        if(glavniGrad == null) System.out.println("Nepostojeca drzava");
+        else System.out.println("Glavni grad drzave " + naziv + " je " + glavniGrad.getNaziv());
+
+    }
+
     public static void main(String[] args) {
         System.out.println("Gradovi su:\n" + ispisiGradove());
         //glavniGrad();

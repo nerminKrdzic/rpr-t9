@@ -20,6 +20,11 @@ public class Grad {
 
     }
 
+    @Override
+    public String toString(){
+        return getNaziv() + " (" + getDrzava().getNaziv() + ") - " + getBrojStanovnika() + "\n";
+    }
+
     public String getNaziv() {
         return naziv;
     }
