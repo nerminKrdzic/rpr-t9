@@ -1,24 +1,19 @@
 package ba.unsa.etf.rpr;
 
 public class Drzava {
-    private int id;
+    private int id = -1;
     private String naziv;
-    private int broj_stanovnika;
-    private int drzava;
+    private Grad glavniGrad;
 
-    public Drzava(int id, String naziv, int broj_stanovnika, int drzava) {
+    public Drzava(){}
+    public Drzava(int id, String naziv, Grad glavniGrad){
         setId(id);
         setNaziv(naziv);
-        setBroj_stanovnika(broj_stanovnika);
-        setDrzava(drzava);
+        setGlavniGrad(glavniGrad);
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public Drzava(String naziv, Grad glavniGrad) {
+        setNaziv(naziv);
+        setGlavniGrad(glavniGrad);
     }
 
     public String getNaziv() {
@@ -29,19 +24,19 @@ public class Drzava {
         this.naziv = naziv;
     }
 
-    public int getBroj_stanovnika() {
-        return broj_stanovnika;
+    public Grad getGlavniGrad() {
+        return glavniGrad;
     }
 
-    public void setBroj_stanovnika(int broj_stanovnika) {
-        this.broj_stanovnika = broj_stanovnika;
+    public void setGlavniGrad(Grad glavniGrad) {
+        this.glavniGrad = glavniGrad;
     }
 
-    public int getDrzava() {
-        return drzava;
+    public int getId() {
+        return id;
     }
 
-    public void setDrzava(int drzava) {
-        this.drzava = drzava;
+    public void setId(int id) {
+        this.id = id;
     }
 }
