@@ -14,6 +14,7 @@ public class GeografijaDAO {
     private GeografijaDAO(){
         try {
             connection = DriverManager.getConnection(URL);
+            imaLiBaza(); // glea ima li uopste potrebnih tabela u bazi
             prepareStatements();
             ResultSet maxID = getConnection().createStatement().executeQuery("select max(id), max(drzava) from grad");
             if(maxID.next()){
@@ -29,6 +30,43 @@ public class GeografijaDAO {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void imaLiBaza(){
+        String kreirajTabele = "CREATE TABLE grad (\n" +
+                "  id integer not null primary key ,\n" +
+                "  naziv text not null ,\n" +
+                "  broj_stanovnika integer\n" +
+                ");\n" +
+                "create table drzava (\n" +
+                "  id integer not null primary key ,\n" +
+                "  naziv text not null ,\n" +
+                "  glavni_grad integer ,\n" +
+                "  foreign key (glavni_grad) references grad(id)\n" +
+                ");\n" +
+                "\n" +
+                "alter table grad add column drzava integer references drzava(id);";
+        boolean dropovoJeTabele = false;
+        try{
+            //ako bilo koji selekt ne uspije jedna ili obije tabele ne postoje
+            getConnection().createStatement().executeQuery("SELECT * FROM grad");
+            getConnection().createStatement().executeQuery("select * from drzava");
+        } catch (SQLException e){
+            dropovoJeTabele = true;
+            try{ // pa dropamo obije tabele da bi ih fino kreirali
+                getConnection().createStatement().executeUpdate("drop table grad;");
+            } catch (SQLException f) {}
+            try{
+                getConnection().createStatement().executeUpdate("drop table drzava;");
+            } catch (SQLException f) {}
+        }
+        if(dropovoJeTabele){
+            try{
+                getConnection().createStatement().executeUpdate(kreirajTabele);
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
         }
     }
 
