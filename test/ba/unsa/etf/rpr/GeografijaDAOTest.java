@@ -10,13 +10,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GeografijaDAOTest {
 
-    @Test
+    @BeforeEach
+    void vratiUPocetnoStanje(){
+        GeografijaDAO dao = GeografijaDAO.getInstance();
+        dao.resetBazu();
+        GeografijaDAO.removeInstance();
+    }
+
+    @Test // ovaj test je vise za sqlite
     void regenerateFile() {
         GeografijaDAO.removeInstance();
         File dbfile = new File("resources/baza.db");
         dbfile.delete();
         GeografijaDAO dao = GeografijaDAO.getInstance();
-        dao.resetBazu();
         ArrayList<Grad> gradovi = dao.gradovi();
         assertEquals("London", gradovi.get(0).getNaziv());
         assertEquals("Francuska", gradovi.get(1).getDrzava().getNaziv());
@@ -25,7 +31,6 @@ class GeografijaDAOTest {
     @Test
     void glavniGrad() {
         GeografijaDAO dao = GeografijaDAO.getInstance();
-        dao.resetBazu(); // zasto se u testovima smatra da ce baza biti u pocetnom obliku svaki put
         // kad se testovi izvrsavaju u random reoslijdu????? i u pitanju je baza podataka
         // baza je tu da bi se sacuvali podaci
         Grad nepoznat = dao.glavniGrad("Bosna i Hercegovina");
@@ -48,7 +53,6 @@ class GeografijaDAOTest {
     @Test
     void obrisiDrzavu2() {
         GeografijaDAO dao = GeografijaDAO.getInstance();
-        dao.resetBazu();
 
         // Nema gradova Beč i Graz koji su iz austrije
         dao.obrisiDrzavu("Austrija");
@@ -64,7 +68,6 @@ class GeografijaDAOTest {
     @Test
     void dodajGrad() {
         GeografijaDAO dao = GeografijaDAO.getInstance();
-        dao.resetBazu();
         Drzava francuska = dao.nadjiDrzavu("Francuska");
         Grad grad = new Grad();
         grad.setNaziv("Marseille");
@@ -88,7 +91,6 @@ class GeografijaDAOTest {
         sarajevo.setDrzava(bih);
 
         GeografijaDAO dao = GeografijaDAO.getInstance();
-        dao.resetBazu();
         dao.dodajDrzavu(bih);
         dao.dodajGrad(sarajevo);
 
@@ -102,7 +104,6 @@ class GeografijaDAOTest {
     @Test
     void izmijeniGrad() {
         GeografijaDAO dao = GeografijaDAO.getInstance();
-        dao.resetBazu();
         Grad bech = dao.glavniGrad("Austrija");
         bech.setNaziv("Vienna");
         dao.izmijeniGrad(bech);

@@ -7,24 +7,27 @@ import java.util.ArrayList;
 public class GeografijaDAO {
     private static GenerateID lastID;
     private static GeografijaDAO instance = null;
+    // za sqlite bazu url
     private final String URL = "jdbc:sqlite:resources/baza.db";
+    // za oracle
+    //private final String URL = "jdbc:oracle:thin:@ora.db.lab.ri.etf.unsa.ba:1521:ETFLAB";
     private Connection connection;
-    private PreparedStatement glavniGradQuery, obrisiDrzavuQuery1, obrisiDrzavuQuery2, gradoviQuery, drzaveQuery, dodajGradQuery, dodajDrzavuQuery, izmijeniGradQuery, nadjiDrzavuQuery, deleteGradQuery, deleteDrzavaQuery;
+    private PreparedStatement glavniGradQuery, obrisiDrzavuQuery1, obrisiDrzavuQuery2, gradoviQuery, dodajGradQuery, dodajDrzavuQuery, izmijeniGradQuery, nadjiDrzavuQuery, deleteGradQuery, deleteDrzavaQuery;
     private PreparedStatement selektGradovi, selektDrzave;
     private GeografijaDAO(){
         try {
-            connection = DriverManager.getConnection(URL);
-            imaLiBaza(); // glea ima li uopste potrebnih tabela u bazi
+            // za sqlitebazu kreiranje konekcije
+             connection = DriverManager.getConnection(URL);
+            //connection = DriverManager.getConnection(URL, "NK17825", "xuYoshjV");
+            imaLiBaza(); // gleda ima li uopste potrebnih tabela u bazi
             prepareStatements();
             ResultSet maxID = getConnection().createStatement().executeQuery("select max(id), max(drzava) from grad");
             if(maxID.next()){
                 if(maxID.getInt(1) > maxID.getInt(2)) lastID = new GenerateID(maxID.getInt(1));
                 else lastID = new GenerateID(maxID.getInt(2));
             } else lastID = new GenerateID();
-            String selektujGradove = "SELECT * FROM grad";
-            String selektujDrzave = "select * from drzava";
-            ResultSet gradovi = getConnection().createStatement().executeQuery(selektujGradove);
-            ResultSet drzave = getConnection().createStatement().executeQuery(selektujDrzave);
+            ResultSet gradovi = selektGradovi.executeQuery();
+            ResultSet drzave = selektDrzave.executeQuery();
             if(!gradovi.next() || !drzave.next())
                 regenerisi();
 
@@ -34,6 +37,7 @@ public class GeografijaDAO {
     }
 
     private void imaLiBaza(){
+        // ovo je za sqlite bazu
         String kreirajTabele = "CREATE TABLE grad (\n" +
                 "  id integer not null primary key ,\n" +
                 "  naziv text not null ,\n" +
@@ -47,6 +51,22 @@ public class GeografijaDAO {
                 ");\n" +
                 "\n" +
                 "alter table grad add column drzava integer references drzava(id);";
+
+        // a ovo je za oracle
+        /*String kreirajTabele = "CREATE TABLE grad (\n" +
+                "                    id int not null primary key ,\n" +
+                "                    naziv VARCHAR2(20) not null ,\n" +
+                "                    broj_stanovnika int,\n" +
+                "                    drzava int\n" +
+                ");\n" +
+                "create table drzava (\n" +
+                "                      id int not null primary key ,\n" +
+                "                      naziv VARCHAR2(20) not null ,\n" +
+                "                      glavni_grad int\n" +
+                ");\n" +
+                "\n" +
+                "alter table grad add foreign key (drzava) references drzava(id);\n" +
+                "alter table drzava add foreign key (glavni_grad) references grad(id);";*/
         boolean dropovoJeTabele = false;
         try{
             //ako bilo koji selekt ne uspije jedna ili obije tabele ne postoje
@@ -54,6 +74,13 @@ public class GeografijaDAO {
             getConnection().createStatement().executeQuery("select * from drzava");
         } catch (SQLException e){
             dropovoJeTabele = true;
+            /*try{ // treba dropati kolone koji su strani kljucevi prvo
+                getConnection().createStatement().executeUpdate("alter table grad drop column drzava;");
+            } catch (SQLException f) {}
+            try{
+                getConnection().createStatement().executeUpdate("alter table drzava drop column glavni_grad;");
+            } catch (SQLException f) {}
+            */
             try{ // pa dropamo obije tabele da bi ih fino kreirali
                 getConnection().createStatement().executeUpdate("drop table grad;");
             } catch (SQLException f) {}
@@ -90,7 +117,6 @@ public class GeografijaDAO {
         obrisiDrzavuQuery1 = getConnection().prepareStatement("delete from grad where drzava = (select id from drzava where naziv = ?)");
         obrisiDrzavuQuery2 = getConnection().prepareStatement("delete from drzava where naziv = ?");
         gradoviQuery = getConnection().prepareStatement("select * from grad order by broj_stanovnika desc");
-        drzaveQuery = getConnection().prepareStatement("select * from drzava");
         dodajGradQuery = getConnection().prepareStatement("insert into grad values (?, ?, ?, ?)");
         dodajDrzavuQuery = getConnection().prepareStatement("insert into drzava values(?, ?, ?)");
         izmijeniGradQuery = getConnection().prepareStatement("update grad set naziv = ?, broj_stanovnika = ? where id = ?");
@@ -132,7 +158,12 @@ public class GeografijaDAO {
         Drzava d3 = new Drzava(105, "Austrija", null);
         g1.setDrzava(d1); g2.setDrzava(d2); g3.setDrzava(d3); g4.setDrzava(d2); g5.setDrzava(d3);
         d1.setGlavniGrad(g1); d2.setGlavniGrad(g2); d3.setGlavniGrad(g3);
-        dodajGrad(g1); dodajGrad(g2); dodajGrad(g3); dodajGrad(g4); dodajGrad(g5);
+
+        dodajGrad(g1);
+        dodajGrad(g2);
+        dodajGrad(g3);
+        dodajGrad(g4);
+        dodajGrad(g5);
     }
 
     public Grad glavniGrad(String drzava){
@@ -181,17 +212,13 @@ public class GeografijaDAO {
         try{
             ResultSet gradoviSet = gradoviQuery.executeQuery();
             while(gradoviSet.next()){
-                Grad g = new Grad(gradoviSet.getString(2), gradoviSet.getInt(3), null);
-                g.setId(gradoviSet.getInt(1));
-                ResultSet drzaveSet = drzaveQuery.executeQuery();
-                while(drzaveSet.next()){
-                    if(gradoviSet.getInt(4) == drzaveSet.getInt(1)){
-                        Drzava d = new Drzava(drzaveSet.getString(2), g);
-                        d.setId(drzaveSet.getInt(1));
-                        g.setDrzava(d);
-                        break;
-                    }
+                Grad g = new Grad(gradoviSet.getInt(1), gradoviSet.getString(2), gradoviSet.getInt(3), null);
+                ResultSet drzava = getConnection().createStatement().executeQuery("select naziv from drzava where id = " + gradoviSet.getInt(4));
+                Drzava d = null;
+                if(drzava.next()){
+                    d = nadjiDrzavu(drzava.getString(1));
                 }
+                g.setDrzava(d);
                 gradovi.add(g);
             }
         } catch (SQLException e){
