@@ -2169,9 +2169,9 @@
     </schema>
     <schema id="723" parent="1" name="NK17825">
       <ObjectId>863</ObjectId>
-      <CreatedTimestamp>2018-12-17.21:49:41</CreatedTimestamp>
-      <ModifiedTimestamp>2018-12-17.21:49:42</ModifiedTimestamp>
-      <IntrospectionTimestamp>2018-12-17.21:49:48</IntrospectionTimestamp>
+      <CreatedTimestamp>2018-12-20.23:04:33</CreatedTimestamp>
+      <ModifiedTimestamp>2018-12-20.23:04:58</ModifiedTimestamp>
+      <IntrospectionTimestamp>2018-12-20.23:05:10</IntrospectionTimestamp>
       <Current>1</Current>
       <Visible>1</Visible>
     </schema>
@@ -2690,15 +2690,15 @@
       <ObjectId>174</ObjectId>
     </schema>
     <table id="894" parent="723" name="DRZAVA">
-      <ObjectId>423485</ObjectId>
-      <CreatedTimestamp>2018-12-17.21:49:42</CreatedTimestamp>
-      <ModifiedTimestamp>2018-12-17.21:49:42</ModifiedTimestamp>
+      <ObjectId>427176</ObjectId>
+      <CreatedTimestamp>2018-12-20.23:04:34</CreatedTimestamp>
+      <ModifiedTimestamp>2018-12-20.23:04:58</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
     </table>
     <table id="895" parent="723" name="GRAD">
-      <ObjectId>423483</ObjectId>
-      <CreatedTimestamp>2018-12-17.21:49:41</CreatedTimestamp>
-      <ModifiedTimestamp>2018-12-17.21:49:42</ModifiedTimestamp>
+      <ObjectId>427174</ObjectId>
+      <CreatedTimestamp>2018-12-20.23:04:33</CreatedTimestamp>
+      <ModifiedTimestamp>2018-12-20.23:04:56</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
     </table>
     <synonym id="896" parent="777" name="ABSPATH">
@@ -37365,30 +37365,30 @@
       <Position>3</Position>
       <DataType>NUMBER(*)|0s</DataType>
     </column>
-    <index id="5849" parent="894" name="SYS_C00321217">
-      <ObjectId>423486</ObjectId>
+    <index id="5849" parent="894" name="SYS_C00326324">
+      <ObjectId>427177</ObjectId>
       <NameSurrogate>1</NameSurrogate>
-      <CreatedTimestamp>2018-12-17.21:49:42</CreatedTimestamp>
-      <ModifiedTimestamp>2018-12-17.21:49:42</ModifiedTimestamp>
+      <CreatedTimestamp>2018-12-20.23:04:34</CreatedTimestamp>
+      <ModifiedTimestamp>2018-12-20.23:04:34</ModifiedTimestamp>
       <TablespaceName>ETFLAB</TablespaceName>
       <ColNames>ID</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="5850" parent="894" name="SYS_C00321217">
+    <key id="5850" parent="894" name="SYS_C00326324">
       <NameSurrogate>1</NameSurrogate>
-      <ModifiedTimestamp>2018-12-17.21:49:42</ModifiedTimestamp>
+      <ModifiedTimestamp>2018-12-20.23:04:34</ModifiedTimestamp>
       <ColNames>ID</ColNames>
       <InitiallyDeferred>1</InitiallyDeferred>
-      <UnderlyingIndexName>SYS_C00321217</UnderlyingIndexName>
+      <UnderlyingIndexName>SYS_C00326324</UnderlyingIndexName>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="5851" parent="894" name="SYS_C00321219">
+    <foreign-key id="5851" parent="894" name="SYS_C00326326">
       <NameSurrogate>1</NameSurrogate>
-      <ModifiedTimestamp>2018-12-17.21:49:42</ModifiedTimestamp>
+      <ModifiedTimestamp>2018-12-20.23:04:58</ModifiedTimestamp>
       <ColNames>GLAVNI_GRAD</ColNames>
       <RefSchemaName>NK17825</RefSchemaName>
       <RefTableName>GRAD</RefTableName>
-      <RefKeyName>SYS_C00321214</RefKeyName>
+      <RefKeyName>SYS_C00326321</RefKeyName>
       <OnDelete>restrict</OnDelete>
     </foreign-key>
     <column id="5852" parent="895" name="ID">
@@ -37409,30 +37409,30 @@
       <Position>4</Position>
       <DataType>NUMBER(*)|0s</DataType>
     </column>
-    <index id="5856" parent="895" name="SYS_C00321214">
-      <ObjectId>423484</ObjectId>
+    <index id="5856" parent="895" name="SYS_C00326321">
+      <ObjectId>427175</ObjectId>
       <NameSurrogate>1</NameSurrogate>
-      <CreatedTimestamp>2018-12-17.21:49:41</CreatedTimestamp>
-      <ModifiedTimestamp>2018-12-17.21:49:41</ModifiedTimestamp>
+      <CreatedTimestamp>2018-12-20.23:04:33</CreatedTimestamp>
+      <ModifiedTimestamp>2018-12-20.23:04:33</ModifiedTimestamp>
       <TablespaceName>ETFLAB</TablespaceName>
       <ColNames>ID</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="5857" parent="895" name="SYS_C00321214">
+    <key id="5857" parent="895" name="SYS_C00326321">
       <NameSurrogate>1</NameSurrogate>
-      <ModifiedTimestamp>2018-12-17.21:49:41</ModifiedTimestamp>
+      <ModifiedTimestamp>2018-12-20.23:04:33</ModifiedTimestamp>
       <ColNames>ID</ColNames>
       <InitiallyDeferred>1</InitiallyDeferred>
-      <UnderlyingIndexName>SYS_C00321214</UnderlyingIndexName>
+      <UnderlyingIndexName>SYS_C00326321</UnderlyingIndexName>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="5858" parent="895" name="SYS_C00321218">
+    <foreign-key id="5858" parent="895" name="SYS_C00326325">
       <NameSurrogate>1</NameSurrogate>
-      <ModifiedTimestamp>2018-12-17.21:49:42</ModifiedTimestamp>
+      <ModifiedTimestamp>2018-12-20.23:04:56</ModifiedTimestamp>
       <ColNames>DRZAVA</ColNames>
       <RefSchemaName>NK17825</RefSchemaName>
       <RefTableName>DRZAVA</RefTableName>
-      <RefKeyName>SYS_C00321217</RefKeyName>
+      <RefKeyName>SYS_C00326324</RefKeyName>
       <OnDelete>restrict</OnDelete>
     </foreign-key>
   </database-model>

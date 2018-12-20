@@ -4,25 +4,20 @@ import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class GeografijaDAO {
+public class OracleDAO {
     private static GenerateID lastID;
-    private static GeografijaDAO instance = null;
-    // za sqlite bazu url
-    private final String URL = "jdbc:sqlite:resources/baza.db";
+    private static OracleDAO instance = null;
+    private final String URL = "jdbc:oracle:thin:@ora.db.lab.ri.etf.unsa.ba:1521:ETFLAB";
     private Connection connection;
     private PreparedStatement glavniGradQuery, obrisiDrzavuQuery1, obrisiDrzavuQuery2, gradoviQuery, dodajGradQuery, dodajDrzavuQuery, izmijeniGradQuery, nadjiDrzavuQuery, deleteGradQuery, deleteDrzavaQuery;
     private PreparedStatement selektGradovi, selektDrzave;
-    private GeografijaDAO(){
+    private OracleDAO(){
         try {
-            // za sqlitebazu kreiranje konekcije
-             connection = DriverManager.getConnection(URL);
+            connection = DriverManager.getConnection(URL, "NK17825", "xuYoshjV");
             imaLiBaza(); // gleda ima li uopste potrebnih tabela u bazi
             prepareStatements();
-            ResultSet maxID = getConnection().createStatement().executeQuery("select max(id), max(drzava) from grad");
-            if(maxID.next()){
-                if(maxID.getInt(1) > maxID.getInt(2)) lastID = new GenerateID(maxID.getInt(1));
-                else lastID = new GenerateID(maxID.getInt(2));
-            } else lastID = new GenerateID();
+            ResultSet idEvi = selektGradovi.executeQuery();
+            lastID = new GenerateID(vratiMaxID(idEvi));
             ResultSet gradovi = selektGradovi.executeQuery();
             ResultSet drzave = selektDrzave.executeQuery();
             if(!gradovi.next() || !drzave.next())
@@ -33,21 +28,45 @@ public class GeografijaDAO {
         }
     }
 
+    private int vratiMaxID(ResultSet idEvi){
+        int maxID = 108;
+        try {
+            if(idEvi.next()){
+                if(idEvi.getInt(1) > idEvi.getInt(4))
+                    maxID = idEvi.getInt(1);
+                else
+                    maxID = idEvi.getInt(4);
+            }
+            while (idEvi.next()) {
+                if(idEvi.getInt(1) > maxID)
+                    maxID = idEvi.getInt(1);
+                if(idEvi.getInt(4) > maxID)
+                    maxID = idEvi.getInt(4);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return maxID;
+    }
+
     private void imaLiBaza(){
-        // ovo je za sqlite bazu
+
+        // a ovo je za oracle
         String kreirajTabele = "CREATE TABLE grad (\n" +
-                "  id integer not null primary key ,\n" +
-                "  naziv text not null ,\n" +
-                "  broj_stanovnika integer\n" +
+                "                    id int not null primary key ,\n" +
+                "                    naziv VARCHAR2(20) not null ,\n" +
+                "                    broj_stanovnika int,\n" +
+                "                    drzava int\n" +
                 ");\n" +
                 "create table drzava (\n" +
-                "  id integer not null primary key ,\n" +
-                "  naziv text not null ,\n" +
-                "  glavni_grad integer ,\n" +
-                "  foreign key (glavni_grad) references grad(id)\n" +
+                "                      id int not null primary key ,\n" +
+                "                      naziv VARCHAR2(20) not null ,\n" +
+                "                      glavni_grad int\n" +
                 ");\n" +
-                "\n" +
-                "alter table grad add column drzava integer references drzava(id);";
+                "commit ;\n" +
+                "alter table grad add foreign key (drzava) references drzava(id);\n" +
+                "alter table drzava add foreign key (glavni_grad) references grad(id);\n" +
+                "commit ;";
         boolean dropovoJeTabele = false;
         try{
             //ako bilo koji selekt ne uspije jedna ili obije tabele ne postoje
@@ -55,6 +74,12 @@ public class GeografijaDAO {
             getConnection().createStatement().executeQuery("select * from drzava");
         } catch (SQLException e){
             dropovoJeTabele = true;
+            try{ // treba dropati kolone koji su strani kljucevi prvo
+                getConnection().createStatement().executeUpdate("alter table grad drop column drzava;");
+            } catch (SQLException f) {}
+            try{
+                getConnection().createStatement().executeUpdate("alter table drzava drop column glavni_grad;");
+            } catch (SQLException f) {}
             try{ // pa dropamo obije tabele da bi ih fino kreirali
                 getConnection().createStatement().executeUpdate("drop table grad;");
             } catch (SQLException f) {}
@@ -88,24 +113,26 @@ public class GeografijaDAO {
         selektGradovi = getConnection().prepareStatement("SELECT * FROM grad");
         selektDrzave = getConnection().prepareStatement("select * from drzava");
         glavniGradQuery = getConnection().prepareStatement("select * from grad where drzava = (select id from drzava where naziv = ?)");
-        obrisiDrzavuQuery1 = getConnection().prepareStatement("delete from grad where drzava = (select id from drzava where naziv = ?)");
-        obrisiDrzavuQuery2 = getConnection().prepareStatement("delete from drzava where naziv = ?");
+        obrisiDrzavuQuery1 = getConnection().prepareStatement("delete from grad where drzava = (select id from drzava where naziv = ?);\n commit ;");
+        obrisiDrzavuQuery2 = getConnection().prepareStatement("delete from drzava where naziv = ?;\n commit ;");
         gradoviQuery = getConnection().prepareStatement("select * from grad order by broj_stanovnika desc");
-        dodajGradQuery = getConnection().prepareStatement("insert into grad values (?, ?, ?, ?)");
-        dodajDrzavuQuery = getConnection().prepareStatement("insert into drzava values(?, ?, ?)");
-        izmijeniGradQuery = getConnection().prepareStatement("update grad set naziv = ?, broj_stanovnika = ? where id = ?");
+        dodajGradQuery = getConnection().prepareStatement("insert into grad values (?, ?, ?, ?);\n commit ;");
+        dodajDrzavuQuery = getConnection().prepareStatement("insert into drzava values(?, ?, ?);\n commit ;");
+        izmijeniGradQuery = getConnection().prepareStatement("update grad set naziv = ?, broj_stanovnika = ? where id = ?;\n commit ;");
         nadjiDrzavuQuery = getConnection().prepareStatement("select * from drzava where naziv = ?");
-        deleteGradQuery = getConnection().prepareStatement("delete from grad where id is not null");
-        deleteDrzavaQuery = getConnection().prepareStatement("delete from drzava where id is not null");
+        deleteGradQuery = getConnection().prepareStatement("delete from grad where id is not null;\n commit ;");
+        deleteDrzavaQuery = getConnection().prepareStatement("delete from drzava where id is not null;\n commit ;");
     }
 
     private static void initialize(){
-        instance = new GeografijaDAO();
+        instance = new OracleDAO();
     }
-    public static GeografijaDAO getInstance(){
+
+    public static OracleDAO getInstance(){
         if(instance == null) initialize();
         return instance;
     }
+
     public static void removeInstance(){
         if(instance != null) {
             try{

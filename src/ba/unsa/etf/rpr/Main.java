@@ -28,8 +28,13 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        System.out.println("Gradovi su:\n" + ispisiGradove());
+        //System.out.println("Gradovi su:\n" + ispisiGradove());
         //glavniGrad();
-        GeografijaDAO.getInstance().glavniGrad("Francuska");
+        //GeografijaDAO.getInstance().glavniGrad("Francuska");
+        OracleDAO o = OracleDAO.getInstance();
+        ArrayList<Grad> gradovi = o.gradovi();
+        for(Grad g: gradovi){
+            System.out.println(g);
+        }
     }
 }
