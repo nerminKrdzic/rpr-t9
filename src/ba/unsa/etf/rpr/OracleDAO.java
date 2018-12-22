@@ -1,6 +1,5 @@
 package ba.unsa.etf.rpr;
 
-import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 
