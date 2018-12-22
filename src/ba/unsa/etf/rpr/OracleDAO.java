@@ -107,7 +107,7 @@ public class OracleDAO {
         selektGradovi = getConnection().prepareStatement("SELECT * FROM NK17825.GRAD");
         selektDrzave = getConnection().prepareStatement("select * from NK17825.DRZAVA");
         glavniGradQuery = getConnection().prepareStatement("select * from NK17825.GRAD where drzava = (select id from NK17825.DRZAVA where naziv = ?)");
-        obrisiDrzavuQuery1 = getConnection().prepareStatement("delete from NK17825.GRAD where drzava = (select id from drzava where naziv = ?)");
+        obrisiDrzavuQuery1 = getConnection().prepareStatement("delete from NK17825.GRAD where drzava = (select id from NK17825.DRZAVA where naziv = ?)");
         obrisiDrzavuQuery2 = getConnection().prepareStatement("delete from NK17825.DRZAVA where naziv = ?");
         gradoviQuery = getConnection().prepareStatement("select * from NK17825.GRAD order by broj_stanovnika desc");
         dodajGradQuery = getConnection().prepareStatement("insert into NK17825.GRAD values (?, ?, ?, ?)");

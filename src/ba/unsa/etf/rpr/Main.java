@@ -1,11 +1,15 @@
 package ba.unsa.etf.rpr;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Main {
+public class Main extends Application {
 
     public static String ispisiGradove(){
         String ispis = new String("");
@@ -28,13 +32,22 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        launch(args);
         //System.out.println("Gradovi su:\n" + ispisiGradove());
         //glavniGrad();
-        //GeografijaDAO.getInstance().glavniGrad("Francuska");
-        OracleDAO o = OracleDAO.getInstance();
-        ArrayList<Grad> gradovi = o.gradovi();
-        for(Grad g: gradovi){
-            System.out.println(g);
-        }
+
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception{
+        Parent root = FXMLLoader.load(getClass().getResource("Geografija.fxml"));
+        primaryStage.setTitle("Tutorijal 9");
+        Scene scene = new Scene(root, 600, 360);
+        primaryStage.setScene(scene);
+        primaryStage.setMinWidth(600);
+        primaryStage.setMaxWidth(600);
+        primaryStage.setMinHeight(400);
+        primaryStage.setMaxHeight(400);
+        primaryStage.show();
     }
 }
