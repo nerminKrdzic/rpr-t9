@@ -71,19 +71,6 @@ public class GeografijaDAO {
         }
     }
 
-    public void resetBazu(){
-        regenerisi();
-        try{
-            ResultSet maxID = getConnection().createStatement().executeQuery("select max(id), max(drzava) from grad");
-            if(maxID.next()){
-                if(maxID.getInt(1) > maxID.getInt(2)) lastID = new GenerateID(maxID.getInt(1));
-                else lastID = new GenerateID(maxID.getInt(2));
-            } else lastID = new GenerateID();
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-    }
-
     private void prepareStatements() throws SQLException {
         selektGradovi = getConnection().prepareStatement("SELECT * FROM grad");
         selektDrzave = getConnection().prepareStatement("select * from drzava");
